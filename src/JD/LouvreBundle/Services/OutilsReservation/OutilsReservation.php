@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManager as ORM;
 
 class OutilsReservation
 {
-    private  $nbBilletsMaxParJour = 1000;
     private $em;
     private $session;
 
@@ -24,56 +23,40 @@ class OutilsReservation
      * @param $nouvelleResaAcceptee
      * @return Reservation|null
      */
-    public function reservationInitial($resaCode, $nouvelleResaAcceptee)
+    public function getCurrentReservation()
     {
-        $resa = null;
-
-        if ($resaCode !== null )
-        {
-            $resa = $this->em->getRepository('JDLouvreBundle:Reservation')->findOneBy(array(
-                'resaCode' => $resaCode
-            ));
+        $resa = $this->session->get('resa');
+        //TODO redirection si resa == null
+        /**
+        if($resa){
+            //$resa = $this->em->getRepository('JDLouvreBundle:Reservation')->findById($resa->getId());
         }
+         **/
 
-        // si le controlleur permet la création d'une nouvelle réservation
-        if ($resa === null && $nouvelleResaAcceptee)
-        {
-            $resa = new Reservation();
-        }elseif($resa === null)
-        {
-            return null;
-        }
         return $resa;
     }
 
-    public function  reservationValider(Reservation $resa)
+    public function  initializeReservation(Reservation $resa)
     {
-        $reservationValide = true;
-        try
-        {
+
+            $this->session->set('resa', $resa);
             $this->em->persist($resa);
             $this->em->flush();
-            $reservationValide = true;
-        }
-        catch (Exception $e)
-        {
-            $this->session->getFlashBag()->add('erreurInterne', "Une erreur interne s'est produite, merci de réessayer.");
-            $reservationValide = false;
-        }
-        return $reservationValide;
     }
 
      /**
      * @param $billets
      * @param $reservation
      */
-    public function prixTotal($billets, $resa){
-            $total = 0;
-        foreach ($billets as  $billet){
-            $total = $total + $billet->getPrix();
+    public function prixTotal($billets){
+        $total = 0;
+        if(!empty($billets))
+        {
+            foreach ($billets as  $billet){
+                $total = $total + $billet->getPrix();
+            }
         }
-        $resa->setPrixtotal($total);
-        $this->em->persist($resa);
-        $this->em->flush();
+
+        return $total;
     }
 }

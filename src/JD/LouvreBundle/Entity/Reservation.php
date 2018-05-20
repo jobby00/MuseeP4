@@ -56,13 +56,6 @@ class Reservation
     private $nbBillets = 1;
 
     /**
-     * @var boolean
-     * @ORM\Column(name="payer", type="boolean")
-     * @Assert\Type(type="boolean")
-     */
-    private $payer = false;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="resa_code", type="string")
@@ -75,6 +68,20 @@ class Reservation
      * @ORM\Column(name="prixTotal", type="float")
      */
     private $prixTotal = 0;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="payer", type="boolean")
+     * @Assert\Type(type="boolean")
+     */
+    private $payer = false;
+
+    /**
+     * @var boolean
+     * @ORM\column(name="checkBillet", type="boolean")
+     * @Assert\Type(type="boolean")
+     */
+     private $checkBillet = false;
 
     /**
      * @ORM\OneToMany(targetEntity="JD\LouvreBundle\Entity\Billets", mappedBy="reservation")
@@ -281,5 +288,29 @@ class Reservation
     public function getPayer()
     {
         return $this->payer;
+    }
+
+    /**
+     * Set checkBillet.
+     *
+     * @param bool $checkBillet
+     *
+     * @return Reservation
+     */
+    public function setCheckBillet($checkBillet)
+    {
+        $this->checkBillet = $checkBillet;
+
+        return $this;
+    }
+
+    /**
+     * Get checkBillet.
+     *
+     * @return bool
+     */
+    public function getCheckBillet()
+    {
+        return $this->checkBillet;
     }
 }

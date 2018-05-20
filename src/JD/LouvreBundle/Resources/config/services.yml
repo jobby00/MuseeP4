@@ -3,7 +3,6 @@ services:
         class: JD\LouvreBundle\Services\OutilsReservation\OutilsReservation
         arguments:
             - "@doctrine.orm.entity_manager"
-            - '@templating'
             - '@session'
 
     jd_reservation.outilsbillets:

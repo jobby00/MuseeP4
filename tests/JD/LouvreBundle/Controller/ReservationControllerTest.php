@@ -59,7 +59,6 @@ class ReservationControllerTest extends  WebTestCase
         $form['jd_louvrebundle_billets[dateresa]'] = '28/04/2018';
         $form['jd_louvrebundle_billets[demijournee]']->select('1');
         $crawler = $client->submit($form);
-        echo $client->getResponse()->getContent();
         $this->assertSame(200, $client->getResponse()->getStatusCode());
 
     }

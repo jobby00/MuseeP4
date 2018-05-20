@@ -43,8 +43,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for billetResa in billetResa %}
-                        {% for billet in billetResa.billets %}
+                        {% for billet in resa.billets %}
                             <tr>
                                 <td> {{ billet.nom|upper }} </td>
                                 <td> {{ billet.prenom|capitalize }} </td>
@@ -57,7 +56,6 @@
                                 <td></td>
                             </tr>
                         {% endfor %}
-                    {% endfor %}
                     </tbody>
                 </table>
                 <div>

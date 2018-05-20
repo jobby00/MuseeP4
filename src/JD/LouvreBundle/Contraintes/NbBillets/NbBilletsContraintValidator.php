@@ -1,10 +1,7 @@
 <?php
 namespace JD\LouvreBundle\Contraintes\NbBillets;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use JD\LouvreBundle\Entity\Billets;
-use JD\LouvreBundle\Entity\Reservation;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintAValidator;
 
@@ -20,20 +17,28 @@ class NbBilletsContraintValidator extends ConstraintAValidator
 
     public function validate($value, Constraint $constraint)
     {
+        dump($value);
+
         if($value->getPayer())
         {
             foreach ($value->getBillets() as $billet)
             {
-                $nbBilleReserves = $this->em->getRepository('JDLouvreBundle:Billets')
-                    ->countByDateResa($billet->getDateResa());
-                    dump($nbBilleReserves);
-                if ($nbBilleReserves + 1 > $this->nbBilletsMaxParJour) {
+                $query = $this->em->createQueryBuilder();
+                $count = $query->select('count(r.payer)')
+                    ->from('JDLouvreBundle:Billets', 'b')
+                    ->innerJoin('b.reservation', 'r')
+                    ->where('r.payer = 1')
+                    ->andWhere('b.dateResa = :dateBillet')
+                    ->setParameter('dateBillet', $billet->getDateResa())
+                    ->getQuery()
+                    ->getSingleScalarResult();
+                dump($count);
+                if ($count + 1 > $this->nbBilletsMaxParJour) {
                     $this->context->buildViolation($constraint->messageNbBillets)
                         ->setParameter('{{date}}', $billet->getDateResa()->format('d/m/Y'))
                         ->addViolation();
                 }
             }
         }
-
     }
 }

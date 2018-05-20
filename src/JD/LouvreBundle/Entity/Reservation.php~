@@ -5,7 +5,7 @@ namespace JD\LouvreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use JD\LouvreBundle\Contraintes\Email as EmailAssert;
-//use JD\LouvreBundle\Contraintes\NBillets as NBilletsAssert;
+use JD\LouvreBundle\Contraintes\NbBillets as NbBilletsAssert;
 use DateTime;
 
 /**
@@ -13,6 +13,7 @@ use DateTime;
  *
  * @ORM\Table(name="reservation")
  * @ORM\Entity(repositoryClass="JD\LouvreBundle\Repository\ReservationRepository")
+ * @NbBilletsAssert\NbBilletsContraint()
  */
 class Reservation
 {
@@ -55,12 +56,6 @@ class Reservation
     private $nbBillets = 1;
 
     /**
-     * @var \Boolean
-     * @ORM\Column(name="payer", type="boolean")
-     */
-    private $payer  = 0;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="resa_code", type="string")
@@ -73,6 +68,20 @@ class Reservation
      * @ORM\Column(name="prixTotal", type="float")
      */
     private $prixTotal = 0;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="payer", type="boolean")
+     * @Assert\Type(type="boolean")
+     */
+    private $payer = false;
+
+    /**
+     * @var boolean
+     * @ORM\column(name="checkBillet", type="boolean")
+     * @Assert\Type(type="boolean")
+     */
+     private $checkBillet = false;
 
     /**
      * @ORM\OneToMany(targetEntity="JD\LouvreBundle\Entity\Billets", mappedBy="reservation")
@@ -255,5 +264,29 @@ class Reservation
     public function getPrixTotal()
     {
         return $this->prixTotal;
+    }
+
+    /**
+     * Set payer.
+     *
+     * @param bool $payer
+     *
+     * @return Reservation
+     */
+    public function setPayer($payer)
+    {
+        $this->payer = $payer;
+
+        return $this;
+    }
+
+    /**
+     * Get payer.
+     *
+     * @return bool
+     */
+    public function getPayer()
+    {
+        return $this->payer;
     }
 }

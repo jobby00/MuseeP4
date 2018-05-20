@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="FR">
+<html xmlns:v="urn:schemas-microsoft-com:vml" lang="FR">
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Muséé Du Louvre{% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     {% block stylesheets %}
-        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
-        <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
     {% endblock %}
 </head>
 <body>
@@ -20,32 +21,187 @@
     <div class="bs-docs-section">
         <div class="row">
             <div class="col-lg-12">
-                    <div class="col-lg-12">
-                        <div class="page-header">
-                            <h4 id="containers">Accueil</h4>
-                        </div>
-                        <div class="bs-component" style="background-color: #8959A8">
-                            {% for billetResa in billetResa %}
-                                {% for billet in billetResa.billets %}
-                                    <div class="jumbotron" style="background: #5d5857">
-                                        <h4>{{ billet.nom|upper }} {{ billet.prenom|capitalize }}</h4>
-                                        <p>{{ billet.dateNaissance | date('d/m/Y') }}   {{ billet.pays }}     {{ billet.pays }}{{ billetResa.resacode }} </p>
-                                        <p>{{ billet.dateresa | date('d/m/Y') }}   {{ (((20.0 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</p>
-                                    </div>
-                                {% endfor %}
-                            {% endfor %}
+                <div class="col-lg-12">
+                    <div class="page-header">
+                        <h4 id="containers">Billets Réserver</h4>
+                    </div>
+
+                    <table style="background-color:aquamarine; width: 100%; border: 0; mso-cellppading:0; mso-cellspacing:0">
+                        <tbody>
+                        <tr>
+                            <td background="https://i.imgur.com/YJOX1PC.png" bgcolor="#6a6e68" valign="top">
+                                <!--[if gte mso 9]>
+                                <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;">
+                                    <v:fill type="tile" src="https://i.imgur.com/YJOX1PC.png" color="#6a6e68" />
+                                    <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
+                                <![endif]-->
+                                <div>
+                                    <table  align="center" style="align:center; width: 100%; border:0; mso-cellppading:0; mso-cellspacing:0">
+                                        <tbody>
+                                        <tr>
+                                            <td height="30" style="font-size: 30px; line-height: 30px;"> &nbsp;</td>
+                                        </tr>
+                                        <tr align="center">
+                                            <td>
+                                                <a href="http://www.jobby00.com">
+                                                    <img src="https://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="30" style="font-size: 30px; line-height: 30px;"> &nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="font-family: 'Crimson',Helvetica, sans-serif; text-align: center; font-size: 40px; color: #5d5857; mso-line-height-rule: exactly; line-height: 28px;">
+                                                Musée du Louvre
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="30" style="font-size: 30px; line-height: 30px;"> &nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: Crimson, Helvetica, sans-serif; font-size: 18px; text-align: center; color: black; mso-line-height-rule: exactly; line-height: 28px;">
+                                                Le musée vous remerciez de votre achat sur sont site:
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--[if gte mso 9]>
+                                </v:textbox>
+                                </v:rect>
+                                <![endif]-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td height="30" style="font-size: 40px; line-height: 40px;"> &nbsp;</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    {% for billetResa in billetResa %}
+                    {% for billet in billetResa.billets %}
+                    <div class="bs-component" style="background-color: #8959A8">
+                        <div class="jumbotron" style="background: #aea79f" >
+                            <table align="center">
+                                <tbody>
+                                <tr align="center">
+                                    <td>
+                                        <a href="http://www.jobby00.com">
+                                            <img src="https://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg">
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 40px; line-height: 40px;"> &nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ billet.nom|upper }} {{ billet.prenom|capitalize }}</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" width="40" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 30px; line-height: 30px; ">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ billet.dateNaissance | date('d/m/Y') }}  </p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" width="40" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 30px; line-height: 30px; ">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ billet.pays }} </p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" width="40" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 30px; line-height: 30px; ">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ billet.pays }}{{ billetResa.resacode }}</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" width="40" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 30px; line-height: 30px; ">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ billet.dateresa | date('d/m/Y') }}</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" width="40" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td height="30" style="font-size: 30px; line-height: 30px; ">&nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table align="left" cellspacing="20px" cellpadding=" 20px">
+                                <tbody>
+                                <tr>
+                                    <td align="center" style="text-align: center"><p>{{ (((20.0 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td height="60" style="font-size: 70px; line-height: 70px;"> &nbsp;</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 
     <footer>
     </footer>
-    {% block javascripts %}
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
-    {% endblock %}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
 </div>
 </body>
 </html>

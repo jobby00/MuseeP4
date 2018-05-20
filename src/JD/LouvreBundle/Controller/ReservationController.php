@@ -22,28 +22,21 @@ class ReservationController extends  Controller
     /**
      * @return Response
      */
-    public function startReservationAction(Request $request, $resaCode)
+    public function startReservationAction(Request $request)
     {
-       $session = $request->getSession();
         //Initialisation du SERVICE OutilsReservayion
-        $outilsReservation = $this->get('service_container')->get('jd_reservation.outilsreservation');
-        $resa = $outilsReservation->reservationInitial($resaCode, true);
+        $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
+        //$resa = $outilsReservation->reservationInitial($resaCode, true);
 
         $form = $this->createForm(ReservationType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
             $resa = $form->getData();
-           $session->set('resa', $resa);
-            if($outilsReservation->reservationValider($resa))
-            {
-                $request->getSession()->getFlashBag()->add('notice', 'Vous avez bien demarrer votre reservation, vous ètres à l\'Etape 2');
-                return $this->redirectToRoute('jd_reservation_startBillets',
-                    [
-                        'resacode'  => $resa->getResaCode(),
-                        'id'        => $resa->getId()
-                    ]);
-            }
+            $outilsReservation->initializeReservation($resa);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Vous avez bien demarré votre reservation, vous êtes à l\'Etape 2');
+            return $this->redirectToRoute('jd_reservation_startBillets');
         }
 
         return $this->render('JDLouvreBundle:LouvreReservation/Reservation:startReservation.html.twig',
@@ -54,14 +47,14 @@ class ReservationController extends  Controller
     /**
      * @return Response
      */
-    public function startBilletsAction(Session $session, Request $request, Reservation $resa)
+    public function startBilletsAction(Session $session, Request $request)
     {
+        $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
+        $resa = $outilsReservation->getCurrentReservation();
         $billets = new Billets();
         // intialisation  des billets
-        $outilsBillets = $this->get('service_container')
+        $outilsBillets = $this->container
             ->get('jd_reservation.outilsbillets');
-
-
         // création du formulaire associé à cette réservation + requête
         $form = $this->createForm(BilletsType::class, $billets);
         $form->handleRequest($request);
@@ -69,49 +62,39 @@ class ReservationController extends  Controller
         // action lors de la soumission du formulaire
         if ($form->isSubmitted() && $form->isValid())
         {
-            $session->set('resa', $resa);
+            //de la ligne 66 à 70 dans une methode  addBillet
             $billets->setReservation($resa);
-             $age = $outilsBillets->calculAge($billets->getDateNaissance());
-             $prix = $outilsBillets->calculPrix($age);
-             $billets->setPrix($prix);
-            if ($outilsBillets->validerBillet($billets, $resa))
-            {
-                $totalBillet = 0;
-                foreach ($resa->getBillets() as $billet)
-                {
-                    $totalBillet ++;
-                }
-                if ($resa->getNbBillets() != $totalBillet)
-                {
-                    //après validation, transfert vers l'étape suivante avec les paramètres de la résa
-                    return $this->redirectToRoute('jd_reservation_startBillets',
-                        [
-                            'resacode'    => $resa->getResaCode(),
-                            'id'    => $resa->getId()
-                        ]);
-                } else {
-                    return $this->redirectToRoute('jd_reservation_panier',
-                        [
-                            'resacode'    => $resa->getResaCode(),
-                            'id'    => $resa->getId()
-                        ]);
-                }
-            }
-        }
-        $outilsReservation = $this->get('service_container')->get('jd_reservation.outilsreservation');
-        $totalBilletPrix = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Billets::class)
-            ->findByReservation($resa);
+            $age = $outilsBillets->calculAge($billets->getDateNaissance());
+            $prix = $outilsBillets->calculPrix($age);
+            $billets->setPrix($prix);
+            $resa->addBillet($billets);
+            $session->set('resa', $resa);
+            // de la ligne 71 à 88 ds methode NextStep
+            $totalBillet = count($resa->getBillets());
 
-        $outilsReservation->prixTotal($totalBilletPrix, $resa);
-        $billetResa = $resa;
-        $resa->getBillets();
+
+            if ($resa->getNbBillets() != $totalBillet)
+            {
+                //après validation, transfert vers l'étape suivante avec les paramètres de la résa
+                return $this->redirectToRoute('jd_reservation_startBillets');
+            }
+            return $this->redirectToRoute('jd_reservation_panier',
+            [
+                'resacode'    => $resa->getResaCode(),
+                'id'          => $resa->getId()
+            ]);
+        }
+
+
+        $totalPrice = $outilsReservation->prixTotal($resa->getBillets());
+        $resa->setPrixTotal($totalPrice);
+
+        //$billetResa = $resa;
+        //$resa->getBillets();
         return $this->render('JDLouvreBundle:LouvreReservation/Billets:startBillets.html.twig',
             [
                 'resa'          => $resa,
-                'billetResa'    => [$billetResa],
+                //'billetResa'    => [$billetResa],
                 'billets'       => $billets,
                 'prixtotal'     => $resa->getPrixTotal(),
                 'form'          => $form->createView()
@@ -121,18 +104,16 @@ class ReservationController extends  Controller
 
     public function panierAction(Request $request, $id, Session $session)
     {
-        $outilsReservation = $this->get('service_container')->get('jd_reservation.outilsreservation');
+       $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
         $repository =  $this->getDoctrine()->getRepository('JDLouvreBundle:Reservation');
         $resa = $repository->find($id);
         $billetResa = $resa;
-        $totalBilletPrix = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Billets::class)
-            ->findByReservation($resa);
-        $outilsReservation->prixTotal($totalBilletPrix, $resa);
+        $resa->setPayer(true);
+        $validator = $this->get('validator');
+        $errors = $validator->validate($resa);
         return $this->render('JDLouvreBundle:LouvreReservation/Panier:panier.html.twig',
             [
+                'errors'            => $errors,
                 'resa'              => $resa,
                 'billetResa'        => [$billetResa],
                 'billets'           => $resa,
@@ -142,8 +123,8 @@ class ReservationController extends  Controller
 
     public  function modifieAction(Billets $billets, Request $request, Session $session)
     {
-        $outilsBillets = $this->get('service_container')->get('jd_reservation.outilsbillets');
-        $outilsReservation = $this->get('service_container')->get('jd_reservation.outilsreservation');
+        $outilsBillets = $this->container->get('jd_reservation.outilsbillets');
+        $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
         $resa = $session->get('resa');
         if(null === $resa)
         {
@@ -263,7 +244,6 @@ class ReservationController extends  Controller
     public function  stripeAction(Session $session, Request $request, Reservation $reservation)
     {
         $reservation->setPayer(true);
-
         $resa =  $session->get('resa');
         $sommeHt = $reservation->getPrixTotal();
         $sommeTtc = (((20.0 * $sommeHt) / 100) + $sommeHt);
@@ -273,25 +253,24 @@ class ReservationController extends  Controller
         $validator = $this->get('validator');
         $errors = $validator->validate($reservation);
 
-        if (count($errors) > 0) {
-            /*
-             * Uses a __toString method on the $errors variable which is a
-             * ConstraintViolationList object. This gives us a nice string
-             * for debugging.
-             */
+        if (count($errors) > 0){
+            dump($errors);
             return $this->redirectToRoute('jd_reservation_panier',
                 [
                     'id' => $resa->getId(),
-                    'resacode' => $resa->getResaCode()
+                    'resacode' => $resa->getResaCode(),
+                    'errors'    => $errors
                 ]
             );
+        }else{
+            \Stripe\Charge::create(array(
+                "amount" => $sommeTtc * 100,
+                "currency" => "eur",
+                "source" => $request->request->get('stripeToken'), // obtained with Stripe.js
+                "description" => "Paiement Test",
+            ));
         }
-        \Stripe\Charge::create(array(
-            "amount" => $sommeTtc * 100,
-            "currency" => "eur",
-            "source" => $request->request->get('stripeToken'), // obtained with Stripe.js
-            "description" => "Paiement Test",
-        ));
+
         //return new Response('');
 
         return $this->redirectToRoute('jd_reservation_success',
