@@ -4,8 +4,6 @@ namespace JD\LouvreBundle\Services\OutilsBillets;
 
 use Doctrine\ORM\EntityManager;
 use JD\LouvreBundle\Entity\Billets;
-use JD\LouvreBundle\Entity\Reservation;
-use JD\LouvreBundle\JDLouvreBundle;
 use Symfony\Component\HttpFoundation\Session\Session;
 use \DateTime;
 
@@ -24,9 +22,10 @@ class OutilsBillets
     private $em;
     private $session;
 
-    public  function __construct(EntityManager $em = null)
+    public  function __construct(EntityManager $em = null, Session $session)
     {
         $this->em = $em;
+        $this->session = $session;
     }
    /**
     public function verifDate(Billets $billets)
@@ -147,5 +146,24 @@ class OutilsBillets
             $prix = $this->tarifReduit;
         }
         return $prix;
+    }
+
+    public function addBillet(Billets $billet)
+    {
+        $age = $this->calculAge($billet->getDateNaissance());
+        $prix = $this->calculPrix($age);
+        $billet->setPrix($prix);
+        $resa = $this->session->get('resa');
+        $billet->setReservation($resa);
+        $resa->addBillet($billet);
+        $this->session->set('resa', $resa);
+    }
+
+    public function isAllTicketsCompleted()
+    {
+        $resa = $this->session->get('resa');
+        $totalBillet = count($resa->getBillets());
+
+        return ($totalBillet == $resa->getNbBillets());
     }
 }

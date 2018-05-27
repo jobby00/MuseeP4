@@ -111,7 +111,7 @@ class Billets
     private $prix = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="JD\LouvreBundle\Entity\Reservation", inversedBy="billets")
+     * @ORM\ManyToOne(targetEntity="JD\LouvreBundle\Entity\Reservation", inversedBy="billets", cascade = {"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $reservation;

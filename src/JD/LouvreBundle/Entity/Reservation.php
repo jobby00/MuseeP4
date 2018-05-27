@@ -60,7 +60,7 @@ class Reservation
      *
      * @ORM\Column(name="resa_code", type="string")
      */
-    private $resaCode;
+    private $resaCode = 0;
 
     /**
      * @var float
@@ -84,7 +84,7 @@ class Reservation
      private $checkBillet = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="JD\LouvreBundle\Entity\Billets", mappedBy="reservation")
+     * @ORM\OneToMany(targetEntity="JD\LouvreBundle\Entity\Billets", mappedBy="reservation", cascade={"persist"})
      * @Assert\Valid
      */
     private $billets;
@@ -96,11 +96,6 @@ class Reservation
     {
         $this->email = "";
         $this->datecreate = new \DateTime("now", new \DateTimeZone('Europe/Paris'));
-        //Generation Du Code dela Reservation
-        $lettres = 'AZERTYUIOPQSDFGHJKLMWXCVBNAZERTYUIOPQSDFGHJKLMWXCVBN';
-        $lettres = str_split(str_shuffle($lettres), 6)[0];
-        $chifres = rand(100000, 999999);
-        $this->resaCode = str_split(str_shuffle($chifres.$lettres),12)[0];
     }
 
     /**

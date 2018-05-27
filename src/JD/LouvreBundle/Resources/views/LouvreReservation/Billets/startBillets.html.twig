@@ -49,7 +49,7 @@
                                 <td> {{ billet.prenom|capitalize }} </td>
                                 <td> {{ billet.pays }} </td>
                                 <td> {{ billet.dateNaissance | date('d/m/Y') }} </td>
-                                <td> {{ billetResa.resacode }} </td>
+                                <td> {{ resa.resacode }} </td>
                                 <td> {{ billet.dateresa | date('d/m/Y') }} </td>
                                 <td> {{ billet.prix }} €</td>
                                 <td> {{ (((19.6 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</td>

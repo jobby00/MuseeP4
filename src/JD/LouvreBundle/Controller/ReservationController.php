@@ -5,6 +5,7 @@ use JD\LouvreBundle\Entity\Billets;
 use JD\LouvreBundle\Entity\Reservation;
 use JD\LouvreBundle\Form\BilletsType;
 use JD\LouvreBundle\Form\ReservationType;
+use JD\LouvreBundle\Services\OutilsReservation\OutilsReservation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class ReservationController extends  Controller
     {
         //Initialisation du SERVICE OutilsReservayion
         $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
+
         //$resa = $outilsReservation->reservationInitial($resaCode, true);
 
         $form = $this->createForm(ReservationType::class);
@@ -33,6 +35,7 @@ class ReservationController extends  Controller
         if($form->isSubmitted() && $form->isValid())
         {
             $resa = $form->getData();
+            $outilsReservation->serialCreate($resa);
             $outilsReservation->initializeReservation($resa);
 
             $request->getSession()->getFlashBag()->add('notice', 'Vous avez bien demarré votre reservation, vous êtes à l\'Etape 2');
@@ -62,39 +65,27 @@ class ReservationController extends  Controller
         // action lors de la soumission du formulaire
         if ($form->isSubmitted() && $form->isValid())
         {
-            //de la ligne 66 à 70 dans une methode  addBillet
-            $billets->setReservation($resa);
-            $age = $outilsBillets->calculAge($billets->getDateNaissance());
-            $prix = $outilsBillets->calculPrix($age);
-            $billets->setPrix($prix);
-            $resa->addBillet($billets);
-            $session->set('resa', $resa);
+            $billets = $form->getData();
+            $outilsBillets->addBillet($billets);
             // de la ligne 71 à 88 ds methode NextStep
-            $totalBillet = count($resa->getBillets());
-
-
-            if ($resa->getNbBillets() != $totalBillet)
+            if($outilsBillets->isAllTicketsCompleted())
             {
-                //après validation, transfert vers l'étape suivante avec les paramètres de la résa
-                return $this->redirectToRoute('jd_reservation_startBillets');
-            }
-            return $this->redirectToRoute('jd_reservation_panier',
-            [
-                'resacode'    => $resa->getResaCode(),
-                'id'          => $resa->getId()
-            ]);
-        }
+                $outilsBillets->validerBillet($billets, $resa);
+                $outilsReservation->initializeReservation($resa);
 
+                return $this->redirectToRoute('jd_reservation_panier',
+                ['id'   => $resa->getId()]);
+            }
+
+            return $this->redirectToRoute('jd_reservation_startBillets');
+        }
 
         $totalPrice = $outilsReservation->prixTotal($resa->getBillets());
         $resa->setPrixTotal($totalPrice);
-
-        //$billetResa = $resa;
-        //$resa->getBillets();
+        dump($resa);
         return $this->render('JDLouvreBundle:LouvreReservation/Billets:startBillets.html.twig',
             [
                 'resa'          => $resa,
-                //'billetResa'    => [$billetResa],
                 'billets'       => $billets,
                 'prixtotal'     => $resa->getPrixTotal(),
                 'form'          => $form->createView()
@@ -111,6 +102,7 @@ class ReservationController extends  Controller
         $resa->setPayer(true);
         $validator = $this->get('validator');
         $errors = $validator->validate($resa);
+        dump($resa);
         return $this->render('JDLouvreBundle:LouvreReservation/Panier:panier.html.twig',
             [
                 'errors'            => $errors,

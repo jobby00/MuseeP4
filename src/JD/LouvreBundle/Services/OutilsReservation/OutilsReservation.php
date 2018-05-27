@@ -18,6 +18,17 @@ class OutilsReservation
         $this->session = $session;
     }
 
+    public function serialCreate(Reservation $resa)
+    {
+        //Generation Du Code dela Reservation
+        $lettres = 'AZERTYUIOPQSDFGHJKLMWXCVBNAZERTYUIOPQSDFGHJKLMWXCVBN';
+        $lettres = str_split(str_shuffle($lettres), 6)[0];
+        $chifres = rand(100000, 999999);
+        $resaCode = str_split(str_shuffle($chifres.$lettres),12)[0];
+        $resa->setResaCode($resaCode);
+        return $resaCode;
+    }
+
     /**
      * @param $resaCode
      * @param $nouvelleResaAcceptee
@@ -40,6 +51,7 @@ class OutilsReservation
     {
 
             $this->session->set('resa', $resa);
+
             $this->em->persist($resa);
             $this->em->flush();
     }

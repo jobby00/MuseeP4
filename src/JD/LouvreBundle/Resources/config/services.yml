@@ -9,7 +9,6 @@ services:
         class: JD\LouvreBundle\Services\OutilsBillets\OutilsBillets
         arguments:
               - "@doctrine.orm.entity_manager"
-              - "@jd_reservation.outilsreservation"
               - '@session'
 
     jd_reservation.contraintBillets:
