@@ -80,14 +80,10 @@ class ReservationController extends  Controller
             return $this->redirectToRoute('jd_reservation_startBillets');
         }
 
-        $totalPrice = $outilsReservation->prixTotal($resa->getBillets());
-        $resa->setPrixTotal($totalPrice);
-        dump($resa);
         return $this->render('JDLouvreBundle:LouvreReservation/Billets:startBillets.html.twig',
             [
                 'resa'          => $resa,
                 'billets'       => $billets,
-                'prixtotal'     => $resa->getPrixTotal(),
                 'form'          => $form->createView()
             ]
         );
@@ -98,7 +94,6 @@ class ReservationController extends  Controller
        $outilsReservation = $this->container->get('jd_reservation.outilsreservation');
         $repository =  $this->getDoctrine()->getRepository('JDLouvreBundle:Reservation');
         $resa = $repository->find($id);
-        $billetResa = $resa;
         $resa->setPayer(true);
         $validator = $this->get('validator');
         $errors = $validator->validate($resa);
@@ -107,9 +102,7 @@ class ReservationController extends  Controller
             [
                 'errors'            => $errors,
                 'resa'              => $resa,
-                'billetResa'        => [$billetResa],
                 'billets'           => $resa,
-                'prixtotal'         => $resa->getPrixTotal()
             ]);
     }
 
@@ -277,15 +270,12 @@ class ReservationController extends  Controller
     public function successAction(Request $request, Session $session)
     {
         $resa = $session->get('resa');
-        $billetResa = $resa;
-        $prixtotal = $resa->getPrixTotal();
         $message = (new \Swift_Message('Musée du Louvre'))
                     ->setContentType('text/html')->setSubject('Confirmation de votre commende')
                     ->setFrom('duverne.job@jobby00.com')->setTo($resa->getEmail())
                     ->setBody($this->renderView('JDLouvreBundle:LouvreReservation/Success/Mailer:theMailer.html.twig',
                         [
                             'resa'              => $resa,
-                            'billetResa'        => [$billetResa],
                             'billets'           => $resa,
                         ],
                     'text/html'
@@ -294,9 +284,7 @@ class ReservationController extends  Controller
         return $this->render('JDLouvreBundle:LouvreReservation/Success:recapSuccess.html.twig',
             [
                 'resa'              => $resa,
-                'billetResa'        => [$billetResa],
                 'billets'           => $resa,
-                'prixtotal'         => $prixtotal
             ]
         );
     }

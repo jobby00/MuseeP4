@@ -58,8 +58,7 @@ class OutilsReservation
 
      /**
      * @param $billets
-     * @param $reservation
-     */
+     * @param
     public function prixTotal($billets){
         $total = 0;
         if(!empty($billets))
@@ -71,4 +70,7 @@ class OutilsReservation
 
         return $total;
     }
+
+    * */
+
 }

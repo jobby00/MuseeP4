@@ -9,15 +9,13 @@
                 <h4 id="containers">Recapitilave Des Billets</h4>
             </div>
             <div class="bs-component">
-                {% for billetResa in billetResa %}
-                    {% for billet in billetResa.billets %}
+                    {% for billet in resa.billets %}
                         <div class="jumbotron">
                             <h4>{{ billet.nom|upper }} {{ billet.prenom|capitalize }}</h4>
-                            <p>{{ billet.dateNaissance | date('d/m/Y') }}   {{ billet.pays }}     {{ billet.pays }}{{ billetResa.resacode }} </p>
+                            <p>{{ billet.dateNaissance | date('d/m/Y') }}   {{ billet.pays }}     {{ billet.pays }}{{ resa.resacode }} </p>
                             <p>{{ billet.dateresa | date('d/m/Y') }}   {{ (((20.0 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</p>
                         </div>
                     {% endfor %}
-                {% endfor %}
             </div>
         </div>
     </div>

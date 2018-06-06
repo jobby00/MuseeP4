@@ -64,8 +64,6 @@ class Reservation
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="prixTotal", type="float")
      */
     private $prixTotal = 0;
 
@@ -258,7 +256,15 @@ class Reservation
      */
     public function getPrixTotal()
     {
-        return $this->prixTotal;
+        $total = 0;
+        dump($this->getBillets());
+        if($this->getBillets()){
+            foreach ($this->getBillets() as $billet)
+            {
+                $total += $billet->getPrix();
+            }
+        }
+        return $total;
     }
 
     /**

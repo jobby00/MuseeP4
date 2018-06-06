@@ -51,14 +51,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for billetResa in billetResa %}
-                                {% for billet in billetResa.billets %}
+                                {% for billet in resa.billets %}
                                     <tr>
                                         <td> {{ billet.nom|upper }} </td>
                                         <td> {{ billet.prenom|capitalize }} </td>
                                         <td> {{ billet.pays }} </td>
                                         <td> {{ billet.dateNaissance | date('d/m/Y') }} </td>
-                                        <td> {{ billetResa.resacode }} </td>
+                                        <td> {{ resa.resacode }} </td>
                                         <td> {{ billet.dateresa | date('d/m/Y') }} </td>
                                         <td> {{ billet.prix }} €</td>
                                         <td> {{ (((19.6 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</td>
@@ -69,18 +68,17 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
-                            {% endfor %}
                             </tbody>
                         </table>
-                        <p><h4>La somme total HT: {{ prixtotal }} €</h4></p>
-                        <p><h4>La somme total TTC: <spam class="price-totale">{{ (((prixtotal * 19.6)) / 100 + prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
+                        <p><h4>La somme total HT: {{ resa.prixtotal }} €</h4></p>
+                        <p><h4>La somme total TTC: <spam class="price-totale">{{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
                         {% if errors|length == 0 %}
                         <form action="{{ path('jd_reservation_stripe', {'id': resa.id}) }}" method="POST">
                             <script
                                     src="https://checkout.stripe.com/checkout.js"
                                     class="stripe-button"
                                     data-key="pk_test_yJVvuJlc5zGFsqwN5J402GTE"
-                                    data-amount="{{ ((((19.6 * prixtotal)/ 100)  + prixtotal)) * 100 }}"
+                                    data-amount="{{ ((((19.6 * resa.prixtotal)/ 100)  + resa.prixtotal)) * 100 }}"
                                     data-description="Vous recevrez vos {{ resa.nbBillets }} billets par email"
                                     data-image = "https://stripe.com/img/documentation/checkout/marketplace.png"
                                     data-email = "{{ resa.email }}"
