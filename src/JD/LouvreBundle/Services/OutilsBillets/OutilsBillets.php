@@ -68,14 +68,13 @@ class OutilsBillets
         return $age->y;
     }
 
-    public function calculPrix($age/**,$tarifreduit = false**/)
+    public function calculPrix($age, $tarifreduit = false)
     {
-        /**
         if($tarifreduit)
         {
             return $this->tarifReduit;
         }
-         * */
+
         if($age <= $this->ageMaxGratuit)
         {
             $prix = 0;
