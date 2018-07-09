@@ -59,15 +59,15 @@
                     </tbody>
                 </table>
                 <div>
-                    <a href="{{ path('jd_reservation_delet',{'id': resa.id })}}" title="supprimer" >
-                        <i class="glyphicon glyphicon-trash"></i>
+                    <a href="{{ path('jd_reservation_delet',{'id': resa.id })}}" class="btn btn-primary" title="supprimer" >
+                        supprimer    <i class="glyphicon glyphicon-trash"></i>
                     </a>
-                    <a href="{{ path('jd_reservation_add',{'id': resa.id })}}" title="ajouter">
-                        <i class="glyphicon glyphicon-plus"></i>
+                    <a href="{{ path('jd_reservation_add',{'id': resa.id })}}" class="btn btn-primary" title="ajouter">
+                        ajouter    <i class="glyphicon glyphicon-plus"></i>
                     </a>
                 </div>
-                <p><h4>La somme total HT: {{ resa.prixtotal }} €</h4></p>
-                <p><h4>La somme total TTC: {{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',') }} €</h4></p>
+                <p><h4>La somme totale HT: {{ resa.prixtotal }} €</h4></p>
+                <p><h4>La somme totale TTC: {{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',') }} €</h4></p>
             </div>
             <div class="bs-component">
                 <div class="jumbotron">

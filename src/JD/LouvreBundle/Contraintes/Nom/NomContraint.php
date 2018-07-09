@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class NomContraint extends Constraint
 {
-    public $messageNom = 'Vous avez connu une erreur, la première lettre votre Nom doit etres en majuscule exemple: Dupont Crousse';
+    public $messageNom = 'Vous avez commis une erreur, la première lettre de votre Nom doit être en majuscule exemple: Dupont Crousse';
 
     public function validatedBy()
     {

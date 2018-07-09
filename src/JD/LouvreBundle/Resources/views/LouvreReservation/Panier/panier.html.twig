@@ -34,7 +34,7 @@
                                     Date de naissance
                                 </th>
                                 <th>
-                                    Code reservation
+                                    Code réservation
                                 </th>
                                 <th>
                                     Date de visite
@@ -46,7 +46,7 @@
                                     Prix  TTC
                                 </th>
                                 <th>
-                                    Modifié
+                                    Modiffié
                                 </th>
                             </tr>
                             </thead>
@@ -62,16 +62,16 @@
                                         <td> {{ billet.prix }} €</td>
                                         <td> {{ (((19.6 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</td>
                                         <td>
-                                            <a href="{{ path('jd_reservation_modifier', {'id': billet.id}) }}" title="Modifier" >
-                                                <i class="glyphicon glyphicon-pencil"></i>
+                                            <a href="{{ path('jd_reservation_modifier', {'id': billet.id}) }}" title="Modifier" class="btn btn-primary">
+                                                Modifier <i class="glyphicon glyphicon-pencil"></i>
                                             </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <p><h4>La somme total HT: {{ resa.prixtotal }} €</h4></p>
-                        <p><h4>La somme total TTC: <spam class="price-totale">{{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
+                        <p><h4>La somme totale HT: {{ resa.prixtotal }} €</h4></p>
+                        <p><h4>La somme totale TTC: <spam class="price-totale">{{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
                         {% if errors|length == 0 %}
                         <form action="{{ path('jd_reservation_stripe', {'id': resa.id}) }}" method="POST">
                             <script

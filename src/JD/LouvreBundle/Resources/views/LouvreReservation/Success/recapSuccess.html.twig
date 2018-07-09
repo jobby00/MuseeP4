@@ -6,7 +6,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-header">
-                <h4 id="containers">Recapitilave Des Billets</h4>
+                <h4 id="containers">Recapitilatif Des Billets</h4>
+            </div>
+            <div>
+                <p><h4>La somme totale HT: {{ resa.prixtotal }} €</h4></p>
+                <p><h4>La somme totale TTC: <spam class="price-totale">{{ (((resa.prixtotal * 19.6)) / 100 + resa.prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
             </div>
             <div class="bs-component">
                     {% for billet in resa.billets %}

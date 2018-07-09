@@ -257,7 +257,6 @@ class Reservation
     public function getPrixTotal()
     {
         $total = 0;
-        dump($this->getBillets());
         if($this->getBillets()){
             foreach ($this->getBillets() as $billet)
             {

@@ -6,7 +6,7 @@
         <span id="nomVide"></span>
     </div>
     <div class="form-group">
-        {{ form_label(form.prenom, 'Prenom') }}
+        {{ form_label(form.prenom, 'Prénom') }}
         {{ form_errors(form.prenom) }}
         {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'id': 'prenom'}}) }}
     </div>
@@ -21,7 +21,7 @@
         {{ form_widget(form.dateNaissance, {'attr': {'class': 'form-control', 'id': 'dateNaissance'}}) }}
     </div>
     <div class="form-check">
-        {{ form_label(form.tarifReduit, 'Tarif reduit') }}
+        {{ form_label(form.tarifReduit, 'Tarif réduit') }}
         {{ form_errors(form.tarifReduit) }}
         {{ form_widget(form.tarifReduit, {'attr': {'class': 'form-check-input', 'id': 'tarifReduit'}}) }}
     </div>

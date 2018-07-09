@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Tests\Fixtures\ConstraintAValidator;
 
 class NbBilletsContraintValidator extends ConstraintAValidator
 {
-    private $nbBilletsMaxParJour = 1;
+    private $nbBilletsMaxParJour = 10;
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -17,8 +17,6 @@ class NbBilletsContraintValidator extends ConstraintAValidator
 
     public function validate($value, Constraint $constraint)
     {
-        dump($value);
-
         if($value->getPayer())
         {
             foreach ($value->getBillets() as $billet)
@@ -32,7 +30,6 @@ class NbBilletsContraintValidator extends ConstraintAValidator
                     ->setParameter('dateBillet', $billet->getDateResa())
                     ->getQuery()
                     ->getSingleScalarResult();
-                dump($count);
                 if ($count + 1 > $this->nbBilletsMaxParJour) {
                     $this->context->buildViolation($constraint->messageNbBillets)
                         ->setParameter('{{date}}', $billet->getDateResa()->format('d/m/Y'))

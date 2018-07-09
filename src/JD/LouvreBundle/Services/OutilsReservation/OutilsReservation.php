@@ -25,7 +25,6 @@ class OutilsReservation
         $lettres = str_split(str_shuffle($lettres), 6)[0];
         $chifres = rand(100000, 999999);
         $resaCode = str_split(str_shuffle($chifres.$lettres),12)[0];
-        $resa->setResaCode($resaCode);
         return $resaCode;
     }
 
@@ -37,40 +36,24 @@ class OutilsReservation
     public function getCurrentReservation()
     {
         $resa = $this->session->get('resa');
-        //TODO redirection si resa == null
-        /**
-        if($resa){
-            //$resa = $this->em->getRepository('JDLouvreBundle:Reservation')->findById($resa->getId());
-        }
-         **/
 
         return $resa;
     }
 
     public function  initializeReservation(Reservation $resa)
     {
-
             $this->session->set('resa', $resa);
 
             $this->em->persist($resa);
             $this->em->flush();
     }
 
-     /**
-     * @param $billets
-     * @param
-    public function prixTotal($billets){
-        $total = 0;
-        if(!empty($billets))
-        {
-            foreach ($billets as  $billet){
-                $total = $total + $billet->getPrix();
-            }
-        }
+    public function addAndDelete(Reservation $resa)
+    {
+        $nb = $resa->getNbBillets();
+        $this->session->set('resa', $resa->setNbBillets($nb));
 
-        return $total;
+        $this->em->persist($resa->setNbBillets($nb));
+        $this->em->flush();
     }
-
-    * */
-
 }
